@@ -1,2 +1,4 @@
+removed_sources:
+  odepkg-0.8.0.tar.gz: 691e8e5f447d929169d0bf24d758b16906082add
 sources:
-  "odepkg-0.8.0.tar.gz:"	691e8e5f447d929169d0bf24d758b16906082add
+  odepkg-0.8.2.tar.gz: f80aa6db6bcb1147fb0d0cb7e22c84522ba236c0
