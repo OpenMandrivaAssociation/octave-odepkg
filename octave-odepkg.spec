@@ -1,41 +1,37 @@
-%define	pkgname odepkg
+%define octpkg odepkg
+
+# Exclude .oct files from provides
+%define __provides_exclude_from ^%{octpkglibdir}/.*.oct$
 
 Summary:	Octave package for solving ODEs
-Name:       octave-%{pkgname}
-Version:	0.8.2
-Release:        6
-Source0:	%{pkgname}-%{version}.tar.gz
+Name:		octave-%{octpkg}
+Version:	0.8.5
+Release:	1
+Source0:	http://downloads.sourceforge.net/octave/%{octpkg}-%{version}.tar.gz
 License:	GPLv2+
 Group:		Sciences/Mathematics
-Url:		http://octave.sourceforge.net/odepkg/
-BuildRequires:  octave-devel >= 3.2.0
-BuildRequires:  pkgconfig(gl)
-BuildRequires:  pkgconfig(glu)
-Requires:       octave(api) = %{octave_api}
+Url:		https://octave.sourceforge.io/%{octpkg}/
+
+BuildRequires:	octave-devel >= 3.8.0
+
+Requires:	octave(api) = %{octave_api}
+
 Requires(post): octave
 Requires(postun): octave
 
 %description
-Octave package for solving ordinary differential equations and more.
+A package for solving ordinary differential equations and more with Octave.
+
+This package is part of external Octave-Forge collection.
 
 %prep
-%setup -q -c %{pkgname}-%{version}
-cp %{SOURCE0} .
+%setup -qcT
+
+%build
+%octave_pkg_build -T
 
 %install
-%__install -m 755 -d %{buildroot}%{_datadir}/octave/packages/
-%__install -m 755 -d %{buildroot}%{_libdir}/octave/packages/
-export OCT_PREFIX=%{buildroot}%{_datadir}/octave/packages
-export OCT_ARCH_PREFIX=%{buildroot}%{_libdir}/octave/packages
-octave -q --eval "pkg prefix $OCT_PREFIX $OCT_ARCH_PREFIX; pkg install -verbose -nodeps -local %{pkgname}-%{version}.tar.gz"
-
-tar zxf %{SOURCE0} 
-mv %{pkgname}-%{version}/COPYING .
-mv %{pkgname}-%{version}/DESCRIPTION .
-
-mv %{buildroot}%{_datadir}/octave/packages/%{pkgname}-%{version}/doc/%{pkgname}.pdf .
-
-%clean
+%octave_pkg_install
 
 %post
 %octave_cmd pkg rebuild
@@ -47,6 +43,10 @@ mv %{buildroot}%{_datadir}/octave/packages/%{pkgname}-%{version}/doc/%{pkgname}.
 %octave_cmd pkg rebuild
 
 %files
-%doc COPYING DESCRIPTION *.pdf
-%{_datadir}/octave/packages/%{pkgname}-%{version}
-%{_libdir}/octave/packages/%{pkgname}-%{version}
+%dir %{octpkglibdir}
+%{octpkglibdir}/*
+%dir %{octpkgdir}
+%{octpkgdir}/*
+%doc %{octpkg}-%{version}/NEWS
+%doc %{octpkg}-%{version}/COPYING
+
